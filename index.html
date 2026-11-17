@@ -86,7 +86,43 @@ function avatar(){return `<img class="characterImage" src="character-${gender===
 function drawTopics(){$('topics').innerHTML='';CATS.forEach(c=>{let label=document.createElement('label');label.className='topic';let input=document.createElement('input');input.type='checkbox';input.checked=selected.has(c);input.onchange=()=>{input.checked?selected.add(c):selected.delete(c);drawTopics()};label.append(input,document.createTextNode(c));$('topics').append(label)});$('selectedInfo').textContent=`${selected.size} de 12 temas seleccionados · ${WORDS.filter(w=>selected.has(w.cat)).length} palabras disponibles`}
 $('girl').onclick=()=>{gender='female';$('girl').classList.add('on');$('boy').classList.remove('on');drawAvatars()};$('boy').onclick=()=>{gender='male';$('boy').classList.add('on');$('girl').classList.remove('on');drawAvatars()};$('allTopics').onclick=()=>{selected=new Set(CATS);drawTopics()};$('noTopics').onclick=()=>{selected.clear();drawTopics()};document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('on',x===b))});
 function show(id){['welcome','setup','game','stageEnd','learn','final'].forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0)}
-function voiceSpeak(t,lang){if(!('speechSynthesis'in window))return;try{speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=.85;speechSynthesis.speak(u)}catch{}}
+// Prefer native US English voices; never allow an English word to be read with a Spanish voice.
+let usEnglishVoice=null;
+function selectUSVoice(){
+ if(!('speechSynthesis' in window))return null;
+ const voices=speechSynthesis.getVoices();
+ const us=voices.filter(v=>/^en[-_]US$/i.test(v.lang));
+ // Prefer high-quality installed US voices when available; otherwise use any en-US voice.
+ us.sort((a,b)=>{
+  const score=v=>(/premium|enhanced|siri|natural/i.test(v.name)?10:0)+(v.localService?2:0);
+  return score(b)-score(a);
+ });
+ usEnglishVoice=us[0]||null;
+ return usEnglishVoice;
+}
+if('speechSynthesis' in window){
+ selectUSVoice();
+ if(speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',selectUSVoice);
+}
+function voiceSpeak(t,lang){
+ if(!('speechSynthesis' in window))return;
+ try{
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang=lang;
+  u.rate=lang==='en-US'?.88:.9;
+  if(lang==='en-US'){
+   const selected=selectUSVoice();
+   if(!selected){
+    // A language tag alone cannot guarantee the accent. Do not use an unknown default voice.
+    console.warn('English Adventure: no en-US voice available on this device.');
+    return;
+   }
+   u.voice=selected;
+  }
+  speechSynthesis.speak(u);
+ }catch(e){console.warn('Voice playback unavailable',e)}
+}
 function stopAudio(){clearInterval(ticker);ticker=null;if(recognition){try{recognition.onend=null;recognition.abort()}catch{}recognition=null}if('speechSynthesis'in window)speechSynthesis.cancel()}
 function poolForLevel(){let t=+$('level').value;let tier=t===20?1:t===15?2:3;return WORDS.filter(w=>selected.has(w.cat)&&w.tier<=tier)}
 function getPool(){return poolForLevel()}

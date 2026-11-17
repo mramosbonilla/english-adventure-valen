@@ -14,6 +14,39 @@ body:has(#welcome:not(.hidden)) header{display:none}
 
 /* V6: etapas claras, selección comprensible y gran final */
 .totalPreview{margin:14px 0;padding:15px 12px;text-align:center;background:linear-gradient(120deg,#7422b9,#c7359e);border:2px solid #ffe07e;border-radius:16px;font-size:1.03rem;line-height:1.5}.totalPreview strong{color:#fff0a7}.stageMap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:18px auto;max-width:650px}.mapStop{border:2px solid #7b64ae;background:#28134f;border-radius:14px;padding:10px 3px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}.mapStop span{font-size:clamp(1.15rem,3vw,2rem)}.mapStop small{font-size:clamp(.57rem,1.7vw,.76rem);font-weight:800}.mapStop.won{background:linear-gradient(140deg,#227c66,#3a448d);border-color:#ffd978}.mapStop.now{background:linear-gradient(140deg,#a52f9b,#5534aa);border-color:#ffde7a;box-shadow:0 0 18px #e98fe677}.mapStop.later{opacity:.55}#stageEnd{background:radial-gradient(circle at top,#a447bc,#281057 65%);text-align:center}#stageEnd h2{font-size:clamp(1.55rem,5vw,2.6rem);color:#ffe58c}#stageEnd #continue{font-size:1.2rem;padding:15px 18px}#final:has(#victoryEffects:not(:empty)){background:radial-gradient(circle at 50% 0,#d38426,#6d279e 43%,#281050 83%);border:3px solid #ffe27b}#victoryEffects{font-size:clamp(1.5rem,5vw,3rem);letter-spacing:.1em;animation:victoryBounce 1.7s ease-in-out infinite alternate}#finalEmoji{font-size:clamp(3.8rem,13vw,7rem);filter:drop-shadow(0 5px 18px #ffe47c)}@keyframes victoryBounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}@media(prefers-reduced-motion:reduce){#victoryEffects{animation:none}}
+
+/* V8: campos alineados y distribución vertical cómoda del juego */
+#setup .grid:has(#level){align-items:stretch;column-gap:12px;row-gap:18px}
+#setup .grid:has(#level)>div{min-width:0;display:flex;flex-direction:column}
+#setup .grid:has(#level) .label{min-height:3.15em;display:flex;align-items:flex-end;line-height:1.2;margin:0 0 9px;font-size:clamp(.92rem,3.3vw,1.08rem)}
+#setup .grid:has(#level) .field{min-width:0;max-width:100%;height:56px;padding:10px 26px 10px 10px;font-size:clamp(.84rem,3.4vw,1.05rem);text-overflow:ellipsis}
+@media(min-width:680px){#setup .grid:has(#level) .label{min-height:2.7em}#setup .grid:has(#level) .field{font-size:1rem}}
+/* El espacio adicional se usa solo cuando la pantalla permite mantener todo visible */
+@media(max-width:679px) and (min-height:760px){
+ #game>.panel{margin:11px 0;padding:13px 12px}
+ #game .scene{height:84px;padding:10px 12px}
+ #game .scene .character{flex-basis:65px;max-width:65px}
+ #game .characterImage{height:70px;width:65px}
+ #game .scene h2{font-size:1.02rem}
+ #game .questionHint{margin-top:15px!important;font-size:.97rem}
+ #game .voiceControls{margin:12px 0 8px}
+ #game #listen{font-size:.92rem;padding:9px 15px}
+ #game .timer{margin:11px 0;font-size:1.12rem}
+ #game .question{font-size:clamp(2.15rem,8.5vw,3.15rem);margin:12px 0 15px;line-height:1.15}
+ #game .answers{gap:11px}
+ #game .answer{min-height:64px;padding:12px 5px;font-size:clamp(1.04rem,4vw,1.35rem);border-radius:14px}
+ #game .feedback{margin:11px 0;font-size:1rem}
+ #game #next{margin-top:11px;padding:13px}
+ #game #quit{margin-top:14px!important;padding:8px 12px;font-size:.85rem}
+}
+@media(max-width:679px) and (min-height:950px){
+ #game .questionHint{margin-top:22px!important}
+ #game .voiceControls{margin:17px 0 12px}
+ #game .timer{margin:15px 0}
+ #game .question{margin:16px 0 20px}
+ #game .answers{gap:14px}
+ #game .answer{min-height:74px}
+}
 </style><style>
 /* V7: lectura y selección cómodas, manteniendo el juego compacto. */
 #game .question{font-size:clamp(2.3rem,8.2vw,4rem);line-height:1.1;font-weight:1000;margin:5px 0 10px;color:#fff6ae;text-shadow:0 2px 13px #15072e,0 0 18px #e14bc5;overflow-wrap:anywhere}
